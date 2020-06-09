@@ -1,15 +1,27 @@
 .list {
   text-align: left;
-  max-width: 750px;
   margin: auto;
 }
 
 .submit-form {
-  max-width: 300px;
+  max-width: 500px;
   margin: auto;
 }
 
 .edit-form {
-  max-width: 300px;
+  max-width: 500px;
   margin: auto;
+}
+.newcasetxt {
+  color: red;
+  font-size:12px;
+  display:inline;
+}
+.cardtxt {
+  text-align: center;
+  height: 125px;
+}
+.cardtext {
+  padding-top: 5px;
+  font-size: 35px;
 }

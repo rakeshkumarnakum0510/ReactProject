@@ -10,19 +10,19 @@ function App(){
   return (
     <Router>
       <div>
-        <nav className="navbar navbar-expand navbar-dark bg-dark">
-          <a href="/tutorials" className="navbar-brand">
+        <nav className="navbar navbar-expand navbar-dark bg-primary">
+          <a href="/cases" className="navbar-brand">
           Home
           </a>
           <div className="navbar-nav mr-auto">
             <li className="nav-item">
-              <Link to={"/tutorials"} className="nav-link">
+              <Link to={"/cases"} className="navbar-brand">
               Country List
               </Link>
             </li>
             <li className="nav-item">
-              <Link to={"/add"} className="nav-link">
-                Add
+              <Link to={"/addcase"} className="navbar-brand">
+                AddCase
               </Link>
             </li>
           </div>
@@ -30,9 +30,9 @@ function App(){
 
         <div className="container mt-3">
           <Switch>
-            <Route exact path={["/", "/tutorials"]} component={CaseList} />
-            <Route exact path="/add" component={AddCase} />
-            <Route path="/tutorials/:id" component={Case} />
+            <Route exact path={["/", "/cases"]} component={CaseList} />
+            <Route exact path="/addcase" component={AddCase} />
+            <Route path="/cases/:id" component={Case} />
           </Switch>
         </div>
       </div>

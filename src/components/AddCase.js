@@ -8,8 +8,8 @@ export default class AddCase extends Component {
     this.onChangeDate = this.onChangeDate.bind(this);
     this.onChangeNewcase = this.onChangeNewcase.bind(this);
     this.onChangeNewdeath = this.onChangeNewdeath.bind(this);
-    this.saveTutorial = this.saveTutorial.bind(this);
-    this.newTutorial = this.newTutorial.bind(this);
+    this.saveCase = this.saveCase.bind(this);
+    this.newCase = this.newCase.bind(this);
 
     this.state = {
       id: null,
@@ -46,7 +46,7 @@ export default class AddCase extends Component {
     });
   }
 
-  saveTutorial() {
+  saveCase() {
     var data = {
       title: this.state.title,
       date: this.state.date,
@@ -73,7 +73,7 @@ export default class AddCase extends Component {
       });
   }
 
-  newTutorial() {
+  newCase() {
     this.setState({
       id: null,
       title: "",
@@ -92,14 +92,14 @@ export default class AddCase extends Component {
         {this.state.submitted ? (
           <div>
             <h4>You submitted successfully!</h4>
-            <button className="btn btn-success" onClick={this.newTutorial}>
+            <button className="btn btn-success" onClick={this.newCase}>
               Add
             </button>
           </div>
         ) : (
           <div>
             <div className="form-group">
-              <label htmlFor="title">Title</label>
+              <label htmlFor="title">Country</label>
               <input
                 type="text"
                 placeholder="Country Name"
@@ -113,7 +113,7 @@ export default class AddCase extends Component {
             </div>
 
             <div className="form-group">
-              <label htmlFor="date">date</label>
+              <label htmlFor="date">Date</label>
               <input
                 type="date"
                 className="form-control"
@@ -148,8 +148,7 @@ export default class AddCase extends Component {
               name="newdeath"
             />
           </div>
-
-            <button onClick={this.saveTutorial} className="btn btn-success">
+            <button onClick={this.saveCase} className="btn btn-success">
               Submit
             </button>
           </div>

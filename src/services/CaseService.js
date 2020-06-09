@@ -2,33 +2,33 @@ import http from "../http-common";
 
 class CaseService {
   getAll() {
-    return http.get("/tutorials");
+    return http.get("/cases");
   }
 
   get(id) {
-    return http.get(`/tutorials/${id}`);
+    return http.get(`/cases/${id}`);
   }
 
   create(data) {
     console.log(data)
-    return http.post("/tutorials", data);
+    return http.post("/cases", data);
   }
 
   update(id, data) {
     console.log(data)
-    return http.put(`/tutorials/${id}`, data);
+    return http.put(`/cases/${id}`, data);
   }
 
   delete(id) {
-    return http.delete(`/tutorials/${id}`);
+    return http.delete(`/cases/${id}`);
   }
 
   deleteAll() {
-    return http.delete(`/tutorials`);
+    return http.delete(`/cases`);
   }
 
   findByTitle(title) {
-    return http.get(`/tutorials?title=${title}`);
+    return http.get(`/cases?title=${title}`);
   }
 }
 

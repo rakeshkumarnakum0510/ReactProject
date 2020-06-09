@@ -1,30 +1,29 @@
 import React, { Component } from "react";
 import CaseService from "../services/CaseService";
 import { Link } from "react-router-dom";
-import Table from 'react-bootstrap/Table'
-
+import Table from 'react-bootstrap/Table';
 export default class CaseList extends Component {
   cases = [];
   todayCases=[];
   constructor(props) {
     super(props);
     this.onChangeSearchTitle = this.onChangeSearchTitle.bind(this);
-    this.retrieveTutorials = this.retrieveTutorials.bind(this);
+    this.retrieveCases = this.retrieveCases.bind(this);
     this.refreshList = this.refreshList.bind(this);
-    this.setActiveTutorial = this.setActiveTutorial.bind(this);
-    this.removeAllTutorials = this.removeAllTutorials.bind(this);
+    this.setActiveCase = this.setActiveCase.bind(this);
+    this.removeAllCases = this.removeAllCases.bind(this);
     this.searchTitle = this.searchTitle.bind(this);
 
     this.state = {
-      tutorials: [],
-      currentTutorial: null,
+      cases: [],
+      currentCase: null,
       currentIndex: -1,
       searchTitle: ""
     };
   }
 
   componentDidMount() {
-    this.retrieveTutorials();
+    this.retrieveCases();
   }
 
   onChangeSearchTitle(e) { 
@@ -35,7 +34,7 @@ export default class CaseList extends Component {
     });
   }
   
-  retrieveTutorials() {
+  retrieveCases() {
     CaseService.getAll()
       .then(response => {
         this.cases=response.data;
@@ -44,26 +43,32 @@ export default class CaseList extends Component {
       let todaydate = new Date().toISOString().split('T')[0]; 
       let td = JSON.stringify(todaydate); 
       this.todayCases=this.cases.filter( a => a.date === JSON.parse(td));
-     // console.log(this.todayCases);
+      this.Todaytotalcases = this.todayCases.reduce((accum, item) => accum + item.newcase, 0);
+      this.Todaytotaldeaths = this.todayCases.reduce((accum, item) => accum + item.newdeath, 0);
+     console.log(this.cases);
       this.todayCases.forEach((el)=>{
         const ccases = this.cases.filter(c => c.title === el.title);
           //  console.warn(ccases); 
             const sumOfcases =ccases.reduce((accum,item) => accum + item.newcase, 0);
             const sumOfdeaths =ccases.reduce((accum,item) => accum + item.newdeath, 0);
-            //console.log(sumOfcases);
+           // console.log(sumOfcases);
          el.totalcases= sumOfcases;
          el.totaldeaths = sumOfdeaths;
-       //console.log(sumOfcases);
-      // console.log(sumOfdeaths);
+      // console.log(sumOfcases);
+  // console.log(sumOfdeaths);
      }); 
 
-     //let res  = [...new Set(this.cases.map(item => item.age))];
-    // console.warn(res);
-
-
-
+    // this.filteredArr = this.cases.reduce((acc, current) => {
+     // const x = acc.find(item => item.title === current.title);
+     // if (!x) {
+     //   return acc.concat([current]);
+     // } else {
+     //   return acc;
+     // }
+   // }, []);
+     // console.warn(this.filteredArr);
         this.setState({
-          tutorials: response.data
+          cases: response.data
         });
       })
       .catch(e => {
@@ -72,21 +77,21 @@ export default class CaseList extends Component {
   }
 
   refreshList() {
-    this.retrieveTutorials();
+    this.retrieveCases();
     this.setState({
-      currentTutorial: null,
+      currentCase: null,
       currentIndex: -1
     });
   }
 
-  setActiveTutorial(tutorial, index) {
+  setActiveCase(cas, index) {
     this.setState({
-      currentTutorial: tutorial,
+      currentCase: cas,
       currentIndex: index
     });
   }
 
-  removeAllTutorials() {
+  removeAllCases() {
     CaseService.deleteAll()
       .then(response => {
         console.log(response.data);
@@ -100,7 +105,7 @@ export default class CaseList extends Component {
     CaseService.findByTitle(this.state.searchTitle)
       .then(response => {
         this.setState({
-          tutorials: response.data
+          cases: response.data
         });
        // console.log(response.data);
       })
@@ -111,11 +116,11 @@ export default class CaseList extends Component {
  
 
   render() {
-    const { searchTitle, tutorials, currentTutorial, currentIndex } = this.state;
+    const { searchTitle, cases, currentCase, currentIndex } = this.state;
 
     return (
       <div className="list row">
-        <div className="col-md-8">
+        <div className="col-md-6 mx-auto"  style={{paddingTop:"20px"}}>
           <div className="input-group mb-3">
             <input
               type="text"
@@ -135,15 +140,49 @@ export default class CaseList extends Component {
             </div>
           </div>
         </div>
-        <div className="col-md-12">
-          <h4>Country List</h4>
+        
+        <div className="col-md-12" style={{display:"flex",paddingTop:"50px"}}>
+        <div className="col-sm-6 col-lg-3">
+          <div className="card text-white" style={{backgroundColor:"#134984"}}>
+          <div className="card-body pb-0 cardtxt">
+          <div>Todays Cases</div>
+          <div className="text-value cardtext">{this.Todaytotalcases}</div>
+        </div>
+        </div>
+        </div>
+        <div className="col-sm-6 col-lg-3">
+          <div className="card text-white bg-warning">
+          <div className="card-body pb-0 cardtxt">
+          <div>Todays Deaths</div>
+          <div className="text-value cardtext">{ this.Todaytotaldeaths}</div>
+        </div>
+        </div>
+        </div>
+        <div className="col-sm-6 col-lg-3">
+        <div className="card text-white  bg-success">
+        <div className="card-body pb-0 cardtxt">
+        <div>Total Cases</div>
+        <div className="text-value cardtext">{this.totalcases}</div>
+      </div>
+      </div>
+      </div>
+      <div className="col-sm-6 col-lg-3">
+      <div className="card text-white bg-danger">
+      <div className="card-body pb-0 cardtxt">
+      <div>Total Deaths</div>
+      <div className="text-value cardtext"> {this.totaldeaths}</div>
+    </div>
+    </div>
+    </div>
+    </div>
+        <div className="col-md-12" style={{paddingTop:"50px"}}>
           <Table striped bordered hover style={{textAlign: "center"}}>
           <thead>
             <tr>
               <th>Country Code</th>
               <th>Country Name</th>
-              <th>Country Newcases</th>
-              <th>Country Newdeaths</th>
+              <th>Country Cases</th>
+              <th>Country Deaths</th>
               <th>Edit Case</th>
             </tr>
           </thead>
@@ -152,11 +191,11 @@ export default class CaseList extends Component {
             <tr key={index}> 
             <td>{reptile.id}</td>
             <td>{reptile.title}</td>
-            <td>{reptile.totalcases} <p style={{color: "red",fontSize:"12px", display:"inline"}}> &uarr; {reptile.newcase}</p></td>
-            <td>{reptile.totaldeaths} <p style={{color: "red",fontSize:"12px", display:"inline"}}> &uarr; {reptile.newdeath}</p></td>
+            <td>{reptile.totalcases} <p className="newcasetxt"> &uarr; {reptile.newcase}</p></td>
+            <td>{reptile.totaldeaths} <p className="newcasetxt"> &uarr; {reptile.newdeath}</p></td>
             <td>
             <Link
-            to={"/tutorials/" + reptile.id}
+            to={"/cases/" + reptile.id}
             className="badge badge-warning"
              >
             Edit
@@ -165,70 +204,68 @@ export default class CaseList extends Component {
           </tr>
             ))}
           </tbody>
-          
+         
         </Table>
-        <h1>TotalCases :{this.totalcases}</h1>
-        <h1>TotalCases :{this.totaldeaths}</h1>
           <button
             className="m-3 btn btn-sm btn-danger"
-            onClick={this.removeAllTutorials}
+            onClick={this.removeAllCases}
           >
             Remove All
           </button>
           <div className="col-md-6">
           <ul className="list-group">
-         {tutorials &&
-           tutorials.map((tutorial, index) => (
+         {cases &&
+          cases.map((cas, index) => (
              <li
                className= {
                  "list-group-item " +
                  (index === currentIndex ? "active" : "")
                           }
-               onClick={() => this.setActiveTutorial(tutorial, index)}
+               onClick={() => this.setActiveCase(cas, index)}
                key={index}
-             >{tutorial.title}
+             >{cas.title}
              </li>
            ))}
        </ul> 
        </div>
         </div>
         <div className="col-md-6">
-          {currentTutorial ? (
+          {currentCase ? (
             <div>
               <h4>Country</h4>
-              <div>
+              <div>/
                 <label>
                   <strong>Title:</strong>
                 </label>{" "}
-                {currentTutorial.title}
+                {currentCase.title}
               </div>
               <div>
                 <label>
                   <strong>Date:</strong>
                 </label>{" "}
-                {currentTutorial.date}
+                {currentCase.date}
               </div>
               <div>
               <label>
                 <strong>Newcases:</strong>
               </label>{" "}
-              {currentTutorial.newcase}
+              {currentCase.newcase}
             </div>
             <div>
             <label>
               <strong>Newdeaths:</strong>
             </label>{" "}
-            {currentTutorial.newdeath}
+            {currentCase.newdeath}
           </div>
               <div>
                 <label>
                   <strong>Status:</strong>
                 </label>{" "}
-                {currentTutorial.published ? "Published" : "Pending"}
+                {currentCase.published ? "Published" : "Pending"}
               </div>
 
               <Link
-                to={"/tutorials/" + currentTutorial.id}
+                to={"/cases/" + currentCase.id}
                 className="badge badge-warning"
               >
                 Edit

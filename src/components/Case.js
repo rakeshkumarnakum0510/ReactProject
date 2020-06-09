@@ -8,13 +8,13 @@ export default class Case extends Component {
     this.onChangeDate = this.onChangeDate.bind(this);
     this.onChangeNewcase = this.onChangeNewcase.bind(this);
     this.onChangeNewdeath = this.onChangeNewdeath.bind(this);
-    this.getTutorial = this.getTutorial.bind(this);
+    this.getCase = this.getCase.bind(this);
     this.updatePublished = this.updatePublished.bind(this);
-    this.updateTutorial = this.updateTutorial.bind(this);
-    this.deleteTutorial = this.deleteTutorial.bind(this);
+    this.updateCase = this.updateCase.bind(this);
+    this.deleteCase = this.deleteCase.bind(this);
 
     this.state = {
-      currentTutorial: {
+      currentCase: {
         id: null,
         title: "",
         date: "",
@@ -29,7 +29,7 @@ export default class Case extends Component {
   }
 
   componentDidMount() {
-    this.getTutorial(this.props.match.params.id);
+    this.getCase(this.props.match.params.id);
   }
 
   onChangeTitle(e) {
@@ -37,8 +37,8 @@ export default class Case extends Component {
 
     this.setState(function(prevState) {
       return {
-        currentTutorial: {
-          ...prevState.currentTutorial,
+        currentCase: {
+          ...prevState.currentCase,
           title: title
         }
       };
@@ -49,8 +49,8 @@ export default class Case extends Component {
     const date = e.target.value;
     
     this.setState(prevState => ({
-      currentTutorial: {
-        ...prevState.currentTutorial,
+      currentCase: {
+        ...prevState.currentCase,
         date: date
       }
     }));
@@ -59,8 +59,8 @@ export default class Case extends Component {
   onChangeNewcase(e) {
     const newcase = e.target.value;
     this.setState(prevState => ({
-      currentTutorial: {
-        ...prevState.currentTutorial,
+      currentCase: {
+        ...prevState.currentCase,
         newcase: newcase
       }
     }));
@@ -69,18 +69,18 @@ export default class Case extends Component {
   onChangeNewdeath(e) {
     const newdeath = e.target.value;
     this.setState(prevState => ({
-      currentTutorial: {
-        ...prevState.currentTutorial,
+      currentCase: {
+        ...prevState.currentCase,
         newdeath: newdeath
       }
     }));
   }
 
-  getTutorial(id) {
+  getCase(id) {
     CaseService.get(id)
       .then(response => {
         this.setState({
-          currentTutorial: response.data
+          currentCase: response.data
         });
         console.log(response.data);
       })
@@ -91,19 +91,19 @@ export default class Case extends Component {
 
   updatePublished(status) {
     var data = {
-      id: this.state.currentTutorial.id,
-      title: this.state.currentTutorial.title,
-      date: this.state.currentTutorial.date,
-      newcase: this.state.currentTutorial.newcase,
-      newdeath: this.state.currentTutorial.newdeath,
+      id: this.state.currentCase.id,
+      title: this.state.currentCase.title,
+      date: this.state.currentCase.date,
+      newcase: this.state.currentCase.newcase,
+      newdeath: this.state.currentCase.newdeath,
       published: status
     };
 
-    CaseService.update(this.state.currentTutorial.id, data)
+    CaseService.update(this.state.currentCase.id, data)
       .then(response => {
         this.setState(prevState => ({
-          currentTutorial: {
-            ...prevState.currentTutorial,
+          currentCase: {
+            ...prevState.currentCase,
             published: status
           }
         }));
@@ -114,15 +114,16 @@ export default class Case extends Component {
       });
   }
 
-  updateTutorial() {
+  updateCase() {
     CaseService.update(
-      this.state.currentTutorial.id,
-      this.state.currentTutorial
+      this.state.currentCase.id,
+      this.state.currentCase
     )
       .then(response => {
         console.log(response.data);
+        this.props.history.push('/cases')
         this.setState({
-          message: "The tutorial was updated successfully!"
+          message: "The case was updated successfully!"
         });
       })
       .catch(e => {
@@ -130,11 +131,11 @@ export default class Case extends Component {
       });
   }
 
-  deleteTutorial() {    
-    CaseService.delete(this.state.currentTutorial.id)
+  deleteCase() {    
+    CaseService.delete(this.state.currentCase.id)
       .then(response => {
         console.log(response.data);
-        this.props.history.push('/tutorials')
+        this.props.history.push('/cases')
       })
       .catch(e => {
         console.log(e);
@@ -142,11 +143,11 @@ export default class Case extends Component {
   }
 
   render() {
-    const { currentTutorial } = this.state;
+    const { currentCase } = this.state;
 
     return (
       <div>
-        {currentTutorial ? (
+        {currentCase ? (
           <div className="edit-form">
             <h4>Country</h4>
             <form>
@@ -156,7 +157,7 @@ export default class Case extends Component {
                   type="text"
                   className="form-control"
                   id="title"
-                  value={currentTutorial.title}
+                  value={currentCase.title}
                   onChange={this.onChangeTitle}
                 />
               </div>
@@ -166,7 +167,7 @@ export default class Case extends Component {
                   type="text"
                   className="form-control"
                   id="date"
-                  value={currentTutorial.date}
+                  value={currentCase.date}
                   onChange={this.onChangeDate}
                 />
               </div>
@@ -177,7 +178,7 @@ export default class Case extends Component {
                   type="number"
                   className="form-control"
                   id="newcase"
-                  value={currentTutorial.newcase}
+                  value={currentCase.newcase}
                   onChange={this.onChangeNewcase}
                 />
               </div>
@@ -188,7 +189,7 @@ export default class Case extends Component {
                 type="number"
                 className="form-control"
                 id="newdeath"
-                value={currentTutorial.newdeath}
+                value={currentCase.newdeath}
                 onChange={this.onChangeNewdeath}
               />
             </div>
@@ -198,11 +199,11 @@ export default class Case extends Component {
                 <label>
                   <strong>Status:</strong>
                 </label>
-                {currentTutorial.published ? "Published" : "Pending"}
+                {currentCase.published ? "Published" : "Pending"}
               </div>
             </form>
 
-            {currentTutorial.published ? (
+            {currentCase.published ? (
               <button
                 className="badge badge-primary mr-2"
                 onClick={() => this.updatePublished(false)}
@@ -220,7 +221,7 @@ export default class Case extends Component {
 
             <button
               className="badge badge-danger mr-2"
-              onClick={this.deleteTutorial}
+              onClick={this.deleteCase}
             >
               Delete
             </button>
@@ -228,16 +229,16 @@ export default class Case extends Component {
             <button
               type="submit"
               className="badge badge-success"
-              onClick={this.updateTutorial}
+              onClick={this.updateCase}
             >
               Update
             </button>
-            <p>{this.state.message}</p>
+            <p>{this.state.message }</p>
           </div>
         ) : (
           <div>
             <br />
-            <p>Please click on a Tutorial...</p>
+            <p>Please click on a Case...</p>
           </div>
         )}
       </div>
