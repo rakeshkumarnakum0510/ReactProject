@@ -25,3 +25,8 @@
   padding-top: 5px;
   font-size: 35px;
 }
+.chart {
+  width: 50%;
+  height: 400px;
+  display: inline-block;
+}

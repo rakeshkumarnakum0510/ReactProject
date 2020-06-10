@@ -109,7 +109,7 @@ export default class AddCase extends Component {
                 value={this.state.title}
                 onChange={this.onChangeTitle}
                 name="title"
-              />
+                     />
             </div>
 
             <div className="form-group">
