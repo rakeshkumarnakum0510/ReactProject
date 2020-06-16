@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import Table from 'react-bootstrap/Table';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import mapDataAsia from './mapDataAsia';
+
+require('highcharts/modules/map')(Highcharts);
 
 export default class CaseList extends Component {
   cases = [];
@@ -65,6 +68,134 @@ export default class CaseList extends Component {
             this.dailydeaths = [ ...this.dailydeaths,  dcases.reduce((accum, item) => accum + item.newdeath, 0), ]
 
          }); 
+         this.sumOfcases = [];
+         this.sumOfdeaths = [];
+         this.sumOfcountrycases = [];
+         const countryNames = [...new Set(this.cases.map(item => item.title))];
+     countryNames.forEach((el) => {
+      const ccases = this.cases.filter(c => c.title === el);
+      this.sumOfcases = [...this.sumOfcases, {
+         name: el,
+         y: ccases.reduce((accum, item) => accum + item.newcase, 0) /this.totalcases* 100
+      }];
+      this.sumOfdeaths = [...this.sumOfdeaths, {
+        name: el,
+        y: ccases.reduce((accum, item) => accum + item.newdeath, 0) /this.totaldeaths* 100
+     }];
+     this.sumOfcountrycases = [...this.sumOfcountrycases, [
+       el,
+       ccases.reduce((accum, item) => accum + item.newcase, 0)
+     ]];
+   });
+   console.log(this.sumOfcases);
+   console.log(this.sumOfdeaths);
+   console.log(this.sumOfcountrycases);
+
+   this.options2 = {
+    chart: {
+          type: 'pie'
+       },
+       title: {
+          text: 'Cases'
+       },
+       tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+       },
+       accessibility: {
+          point: {
+             valueSuffix: '%'
+          }
+       },
+       credits: {
+        enabled: false
+    },
+       plotOptions: {
+          pie: {
+             allowPointSelect: true,
+             cursor: 'pointer',
+             dataLabels: {
+                enabled: false
+             },
+             colors: [
+              '#28a745',
+              '#2f353a',
+              '#20a8d8',
+              '#ffc107',
+              '#dc3545',
+              '#134984'
+            ],
+             showInLegend: true
+          }
+       },
+     series: [
+       {
+         data:this.sumOfcases
+       }
+     ]
+   };
+
+   this.options3 = {
+   chart: {
+         type: 'pie'
+      },
+      title: {
+         text: 'Deaths'
+      },
+      tooltip: {
+         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      },
+      accessibility: {
+         point: {
+            valueSuffix: '%'
+         }
+      },
+      credits: {
+        enabled: false
+    },
+      plotOptions: {
+         pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+               enabled: false
+            },
+            colors: [
+              '#28a745',
+              '#2f353a',
+              '#20a8d8',
+              '#ffc107',
+              '#dc3545',
+              '#134984'
+            ],
+            showInLegend: true
+         }
+      },
+    series: [
+      {
+        data:this.sumOfdeaths
+      }
+    ]
+  };
+ this.mapOptions = {
+    title: {
+      text: ''
+    },
+    colorAxis: {
+      min: 0,
+      stops: [[0.4, '#ffff00'], [0.65, '#bfff00'], [1, '	#40ff00']]
+    },
+  
+    series: [
+      {
+        mapData: mapDataAsia,
+        name: 'Asia',
+        data: this.sumOfcountrycases
+      }
+    ]
+  };
+  
+
+
         this.setState({
           cases: response.data
         });
@@ -154,15 +285,10 @@ export default class CaseList extends Component {
        }
       ]
     };
+
+
     return (
       <div className="list row">
-      <div className="col-md-12" style={{display:"flex"}}>
-      <div className="chart">
-      <HighchartsReact  highcharts={Highcharts} options={options} />
-      </div>
-      <div className="chart">
-      <HighchartsReact highcharts={Highcharts} options={options1} />
-      </div></div>
         <div className="col-md-6 mx-auto"  style={{paddingTop:"20px"}}>
           <div className="input-group mb-3">
             <input
@@ -255,7 +381,28 @@ export default class CaseList extends Component {
           >
             Remove All
           </button>
-        
+          <div className="col-md-12" style={{display:"flex",marginTop:"40px"}}>
+          <div className="chart">
+          <HighchartsReact  highcharts={Highcharts} options={options} />
+          </div>
+          <div className="chart">
+          <HighchartsReact highcharts={Highcharts} options={options1} />
+          </div></div>
+
+          <div className="col-md-12" style={{display:"flex",marginTop:"40px"}}>
+          <div className="chart">
+          <HighchartsReact  highcharts={Highcharts} options={this.options2} />
+          </div>
+          <div className="chart">
+          <HighchartsReact highcharts={Highcharts} options={this.options3} />
+          </div></div>
+          <div className="col-md-12" style={{marginTop:"40px"}}>
+          <HighchartsReact
+          options={this.mapOptions}
+          constructorType={'mapChart'}
+          highcharts={Highcharts}></HighchartsReact>
+      </div>
+          
           <div className="col-md-6">
           <ul className="list-group">
          {cases &&
