@@ -101,6 +101,7 @@ export default class AddCase extends Component {
             <div className="form-group">
               <label htmlFor="title">Country</label>
               <select   className="form-control" id="title" name="title" value={this.state.title} onChange={this.onChangeTitle}>
+              <option>Select Country</option>
               <option value="Afganistan">Afghanistan</option>
               <option value="Albania">Albania</option>
               <option value="Algeria">Algeria</option>

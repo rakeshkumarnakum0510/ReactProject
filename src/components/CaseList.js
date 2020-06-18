@@ -61,13 +61,15 @@ export default class CaseList extends Component {
      }); 
      this.dailycases = [];
      this.dailydeaths = [];
-      const dates = [...new Set(this.cases.map(item => item.date))];
+      const dates = ([...new Set(this.cases.map(item => item.date))].sort());
          dates.forEach((e) => {
             const dcases = this.cases.filter(c => c.date === e);
             this.dailycases = [...this.dailycases,  dcases.reduce((accum, item) => accum + item.newcase, 0), ];
             this.dailydeaths = [ ...this.dailydeaths,  dcases.reduce((accum, item) => accum + item.newdeath, 0), ]
 
          }); 
+         
+         console.warn(dates);
          this.sumOfcases = [];
          this.sumOfdeaths = [];
          this.sumOfcountrycases = [];
@@ -182,13 +184,13 @@ export default class CaseList extends Component {
     },
     colorAxis: {
       min: 0,
-      stops: [[0.4, '#ffff00'], [0.65, '#bfff00'], [1, '	#40ff00']]
+      stops: [[0.25, '#ffff00'], [0.50, '#bfff00'], [0.75, '#bfff00'], [1, '	#40ff00']]
     },
   
     series: [
       {
         mapData: mapDataAsia,
-        name: 'Asia',
+        name: 'Cases',
         data: this.sumOfcountrycases
       }
     ]
@@ -402,23 +404,22 @@ export default class CaseList extends Component {
           constructorType={'mapChart'}
           highcharts={Highcharts}></HighchartsReact>
       </div>
-          
-          <div className="col-md-6">
-          <ul className="list-group">
-         {cases &&
-          cases.map((cas, index) => (
-             <li
-               className= {
-                 "list-group-item " +
-                 (index === currentIndex ? "active" : "")
-                          }
-               onClick={() => this.setActiveCase(cas, index)}
-               key={index}
-             >{cas.title}
-             </li>
-           ))}
-       </ul> 
-                        </div> 
+            <div className="col-md-6" style={{marginTop:"200px"}}>
+      <ul className="list-group">
+     {cases &&
+      cases.map((cas, index) => (
+         <li
+           className= {
+             "list-group-item " +
+             (index === currentIndex ? "active" : "")
+                      }
+           onClick={() => this.setActiveCase(cas, index)}
+           key={index}
+         >{cas.title}
+         </li>
+       ))}
+     </ul> 
+    </div> 
         </div>
           <div className="col-md-6">
           {currentCase ? (
