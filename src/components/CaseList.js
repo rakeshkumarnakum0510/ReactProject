@@ -5,7 +5,8 @@ import Table from 'react-bootstrap/Table';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import mapDataAsia from './mapDataAsia';
-
+import {ToastContainer, toast, Zoom, Bounce} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 require('highcharts/modules/map')(Highcharts);
 
 export default class CaseList extends Component {
@@ -312,6 +313,11 @@ export default class CaseList extends Component {
             </div>
           </div>
         </div>
+        <ToastContainer
+        draggable={false}
+        transition={Zoom} 
+        autoClose={2000}   
+        />
         <div className="col-md-12" style={{display:"flex",paddingTop:"50px"}}>
         <div className="col-sm-6 col-lg-3">
           <div className="card text-white" style={{backgroundColor:"#134984"}}>
@@ -375,7 +381,6 @@ export default class CaseList extends Component {
           </tr>
             ))}
           </tbody>
-         
         </Table>
           <button
             className="m-3 btn btn-sm btn-danger"
@@ -415,7 +420,7 @@ export default class CaseList extends Component {
                       }
            onClick={() => this.setActiveCase(cas, index)}
            key={index}
-         >{cas.title}
+         >{cas.title} 
          </li>
        ))}
      </ul> 

@@ -1,9 +1,14 @@
 import React, { Component } from "react";
 import CaseService from "../services/CaseService";
+import SimpleReactValidator from 'simple-react-validator';
+import {ToastContainer, toast, Zoom, Bounce} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default class AddCase extends Component {
+  
   constructor(props) {
     super(props);
+    this.validator = new SimpleReactValidator();
     this.onChangeTitle = this.onChangeTitle.bind(this);
     this.onChangeDate = this.onChangeDate.bind(this);
     this.onChangeNewcase = this.onChangeNewcase.bind(this);
@@ -15,10 +20,13 @@ export default class AddCase extends Component {
       id: null,
       title: "",
       date: "", 
-      newcase:0,
-      newdeath:0,
+      newcase:"",
+      newdeath:"",
+      titleError:"",
+      dateError: "", 
+      newcaseError:"",
+      newdeathError:"",
       published: false,
-
       submitted: false
     };
   }
@@ -46,16 +54,47 @@ export default class AddCase extends Component {
     });
   }
 
+    validate = () => {
+      let newcaseError = "";
+      let newdeathError = "";
+      let  dateError = "";
+      let titleError = "";
+      
+         
+      if(!this.state.title){
+        titleError = "Please select Country "
+      }
+      if(!this.state.date){
+        dateError = "Please select date "
+      }
+      if(!this.state.newcase){
+        newcaseError = "Newcases cannot be blank "
+      }
+      if(!this.state.newdeath){
+        newdeathError = "Newdeaths cannot be blank "
+      }
+      if(titleError|| dateError || newcaseError || newdeathError) {
+        this.setState({titleError, dateError, newdeathError, newcaseError})
+        return false;
+      }
+      return true;
+    }
+
   saveCase() {
+     
+    const isValid = this.validate();
+    if (isValid) {
+      toast.success("Success");
     var data = {
       title: this.state.title,
       date: this.state.date,
       newcase: this.state.newcase,
       newdeath: this.state.newdeath
     };
-
+   
     CaseService.create(data)
       .then(response => {
+      
         this.setState({
           id: response.data.id,
           title: response.data.title,
@@ -65,12 +104,16 @@ export default class AddCase extends Component {
           published: response.data.published,
 
           submitted: true
-        });
+        }); 
+       
+        this.props.history.push('/cases')
+       
         console.log(response.data);
       })
       .catch(e => {
         console.log(e);
       });
+    }
   }
 
   newCase() {
@@ -88,18 +131,20 @@ export default class AddCase extends Component {
 
   render() {
     return (
+      
       <div className="submit-form">
+     
         {this.state.submitted ? (
           <div>
             <h4>You submitted successfully!</h4>
             <button className="btn btn-success" onClick={this.newCase}>
-              Add
+              AddCase
             </button>
           </div>
         ) : (
           <div>
             <div className="form-group">
-              <label htmlFor="title">Country</label>
+              <label htmlFor="title">Country Name</label>
               <select   className="form-control" id="title" name="title" value={this.state.title} onChange={this.onChangeTitle}>
               <option>Select Country</option>
               <option value="Afganistan">Afghanistan</option>
@@ -350,6 +395,7 @@ export default class AddCase extends Component {
               <option value="Zimbabwe">Zimbabwe</option>
            </select>
             </div>
+            <div style={{color:"red"}}> {this.state.titleError}</div>
             <div className="form-group">
               <label htmlFor="date">Date</label>
               <input
@@ -361,34 +407,40 @@ export default class AddCase extends Component {
                 onChange={this.onChangeDate}
                 name="date"
               />
+              <div style={{color:"red"}}> {this.state.dateError}</div>
             </div>
             <div className="form-group">
-            <label htmlFor="newcase">Newcase</label>
+            <label htmlFor="newcase">New Cases</label>
             <input
               type="number"
               className="form-control"
               id="newcase"
+              placeholder="Enter today's cases"
               required
               value={this.state.newcase}
               onChange={this.onChangeNewcase}
               name="newcase"
             />
+            <div  style={{color:"red"}}> {this.state.newcaseError}</div>
           </div>
           <div className="form-group">
-            <label htmlFor="newdeath">Newdeath</label>
+            <label htmlFor="newdeath">New Deaths</label>
             <input
               type="number"
               className="form-control"
               id="newdeath"
+              placeholder="Enter today's deaths"
               required
               value={this.state.newdeath}
               onChange={this.onChangeNewdeath}
               name="newdeath"
             />
+            <div  style={{color:"red"}}> {this.state.newdeathError}</div>
           </div>
             <button onClick={this.saveCase} className="btn btn-success">
               Submit
             </button>
+           
           </div>
         )}
       </div>

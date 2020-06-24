@@ -6,11 +6,28 @@ import Case from "./components/Case";
 import CaseList from "./components/CaseList";
 import './App.css';
 
-function App(){
+const App = () => {
   return (
-    <Router>
+    <Router>  
       <div>
-        <nav className="navbar navbar-expand navbar-dark bg-primary">
+      <ul>
+      <li>
+      <a href="/cases"  >
+      Home
+      </a>
+      </li>
+        <li>
+        <a href="/cases" >
+        Country List
+        </a>
+        </li>
+        <li>
+        <a href="/Addcase">
+        Addcase
+        </a>
+        </li>
+    </ul>
+           {/*  <nav className="navbar navbar-expand navbar-dark bg-primary">
           <a href="/cases" className="navbar-brand">
           Home
           </a>
@@ -27,6 +44,7 @@ function App(){
             </li>
           </div>
         </nav>
+  */}
 
         <div className="container mt-3">
           <Switch>

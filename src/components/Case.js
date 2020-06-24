@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-import CaseService from "../services/CaseService";
+import CaseService from "../services/CaseService"
+import {ToastContainer, toast, Zoom, Bounce} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default class Case extends Component {
   constructor(props) {
@@ -90,6 +92,7 @@ export default class Case extends Component {
   }
 
   updatePublished(status) {
+  
     var data = {
       id: this.state.currentCase.id,
       title: this.state.currentCase.title,
@@ -115,6 +118,7 @@ export default class Case extends Component {
   }
 
   updateCase() {
+    toast.success("Update Country Cases");
     CaseService.update(
       this.state.currentCase.id,
       this.state.currentCase
@@ -131,7 +135,8 @@ export default class Case extends Component {
       });
   }
 
-  deleteCase() {    
+  deleteCase() {   
+    toast.warn("Delete Country "); 
     CaseService.delete(this.state.currentCase.id)
       .then(response => {
         console.log(response.data);
