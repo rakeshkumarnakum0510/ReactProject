@@ -441,7 +441,7 @@ export default class AddCase extends Component {
                             <ErrorMessage name="date" component="div" className="invalid-feedback" />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="newcase">New Deaths</label>
+                            <label htmlFor="newcase">New Cases</label>
                             <Field name="newcase" type="number" className={'form-control' + (errors.newcase && touched.newcase ? ' is-invalid' : '')}  placeholder="Enter today's cases" />
                             <ErrorMessage name="newcase" component="div" className="invalid-feedback" />
                         </div>
