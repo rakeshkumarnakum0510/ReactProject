@@ -9,7 +9,7 @@
     "axios": "^0.19.2",
     "bootstrap": "^4.5.0",
     "formik": "^2.1.4",
-    "highcharts": "^8.1.1",
+    "highcharts": "^9.0.0",
     "highcharts-react-official": "^3.0.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
